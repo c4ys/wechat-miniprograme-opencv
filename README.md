@@ -159,4 +159,5 @@ Page({
 * [微信官方WXWebAssembly介绍](https://developers.weixin.qq.com/miniprogram/dev/framework/performance/wasm.html "WXWebAssembly")
 * [opencv.js生产独立.wasm文件](https://github.com/opencv/opencv/issues/13356 "Could not generate .wasm file when building opencv.js")
 * [ WeChat-MiniProgram-AR-WASM](https://github.com/sanyuered/WeChat-MiniProgram-AR-WASM)
-
+* [微信小程序运行WebAssembly版OpenCV](https://zhuanlan.zhihu.com/p/441600357)
+* [opencv.js-wechat](https://github.com/leo9960/opencv.js-wechat)

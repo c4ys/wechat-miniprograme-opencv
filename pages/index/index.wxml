@@ -2,6 +2,6 @@
 <view class="container">
   <label>原图</label>
   <canvas id="src" type="2d" width="300" height="300"></canvas>
-  <button bindtap="tryIt" type="primary" disabled="{{disabled}}" class="m1">灰度化</button>
+  <label>灰度化后</label>
   <canvas id="dst" type="2d" width="300" height="300"></canvas>
 </view>
