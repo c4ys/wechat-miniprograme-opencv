@@ -933,7 +933,8 @@
         _emscripten_get_now = dateNow;
       } else
         _emscripten_get_now = function () {
-          return performance.now();
+          // return performance.now();
+          return Date.now()
         };
 
       function setMainLoop(
