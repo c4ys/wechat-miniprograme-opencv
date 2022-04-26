@@ -6,13 +6,13 @@
   <view class="section section_gap">
     <text class="section__title">背景参数</text>
     <view class="body-view">
-      <slider style="width: 70vw;" bindinput="removeBg" value="{{blockSize}}" min="1" max="301" step="2" show-value />
+      <slider style="width: 70vw;" bindchange="removeBg" model:value="{{blockSize}}" min="1" max="301" step="2" show-value />
     </view>
   </view>
   <view class="section section_gap">
     <text class="section__title">杂点参数</text>
     <view class="body-view">
-      <slider style="width: 70vw;" bindinput="removeBg" value="{{cSize}}" min="0" max="50" step="2" show-value />
+      <slider style="width: 70vw;" bindchange="removeBg" model:value="{{cSize}}" min="0" max="50" step="2" show-value />
     </view>
   </view>
   <view>
