@@ -1,7 +1,10 @@
 小程序OPENCV教程
 ======================
 
+**开发者工具不要勾选编译为ES5**
+
 本文一步一步教你如何在小程序中使用最新版的OpenCV（本文发布时为4.5.5）
+
 
 ![去背景样例](opencv/demo.png)
 
@@ -130,6 +133,15 @@ http-server build_wasm/bin/
         }
 ```
 
+没有performance.now方法
+
+```
+        _emscripten_get_now = function () {
+          // return performance.now();
+          return Date.now()
+        };
+```
+
 ## 修改OpenCV.js的imread，imshow,VideoCapture方法支持小程序
 
 这些方法定义在`modules\js\src\helpers.js`文件中，修改后重新编译和生成wasm文件即可
@@ -137,23 +149,7 @@ http-server build_wasm/bin/
 
 ## 在小程序使用`OpenCV.js`
 
-```javascript
-const app = getApp()
-WebAssembly = WXWebAssembly;
-let cv = require('../../opencv/opencv.js');
-
-Page({
-  onLoad: function (options) {
-    if (cv instanceof Promise) {
-      cv.then((target) => {
-        console.log(target);
-      })
-    } else {
-      console.log(cv);
-    }
-  }
-})
-```
+参考示例
 
 ## 参考
 * [Build OpenCV.js官方教程](https://docs.opencv.org/4.5.5/d4/da1/tutorial_js_setup.html)
