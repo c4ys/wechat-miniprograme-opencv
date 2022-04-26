@@ -1,27 +1,52 @@
 const app = getApp()
-WebAssembly = WXWebAssembly
-
-const cv_promise = require('../../opencv/opencv.js');
-let cv;
-cv_promise.then(target => cv = target)
-
-
+const cv = require('../../opencv/opencv.js');
+var delay
 Page({
   data: {
-    src: "/opencv/test.png",
-    srcData: null,
-    disabled: false,
+    src: "/opencv/test.jpg",
+    blockSize: 101,
+    cSize: 20
   },
   onLoad: async function (options) {
     var _that = this
-    cv_promise.then((cv) => {
+    cv['onRuntimeInitialized'] = () => {
       _that.imread(_that.data.src).then(res => {
         _that.imshow("src", res)
+      })
+      _that.removeBg()
+    };
+  },
+  async removeBg() {
+    var _that = this
+    _that.imread(_that.data.src).then(res => {
+      clearTimeout(delay);
+      delay = setTimeout(function () {
         let src = cv.matFromImageData(res)
-        let dst = new cv.Mat()
-        cv.cvtColor(src, dst, cv.COLOR_RGBA2GRAY)
+        let gray = new cv.Mat();
+        let blur = new cv.Mat();
+        let threshold = new cv.Mat();
+        let open = new cv.Mat();
+        let close = new cv.Mat();
+        let mask = new cv.Mat();
+        let dst = new cv.Mat();
+        cv.cvtColor(src, gray, cv.COLOR_BGR2GRAY);
+        cv.medianBlur(gray, blur, 1)
+        let blockSize = parseInt(_that.data.blockSize);
+        let CSize = parseInt(_that.data.cSize);
+        console.log(blockSize, CSize)
+        cv.adaptiveThreshold(blur, threshold, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY_INV, blockSize, CSize);
+        cv.bitwise_not(threshold, mask);
+        cv.add(gray, mask, dst)
         _that.imshow("dst", dst)
-      });
+        src.delete();
+        gray.delete();
+        threshold.delete();
+        blur.delete();
+        open.delete();
+        close.delete();
+        mask.delete();
+        dst.delete();
+      }, 500);
     })
   },
   async imread(path) {

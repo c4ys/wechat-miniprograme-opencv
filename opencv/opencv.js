@@ -215,7 +215,7 @@
       }
 
       function convertJsFunctionToWasm(func, sig) {
-        if (typeof WebAssembly.Function === "function") {
+        if (typeof WXWebAssembly.Function === "function") {
           var typeNames = {
             i: "i32",
             j: "i64",
@@ -229,7 +229,7 @@
           for (var i = 1; i < sig.length; ++i) {
             type.parameters.push(typeNames[sig[i]]);
           }
-          return new WebAssembly.Function(type, func);
+          return new WXWebAssembly.Function(type, func);
         }
         var typeSection = [1, 0, 1, 96];
         var sigRet = sig.slice(0, 1);
@@ -256,8 +256,8 @@
             [2, 7, 1, 1, 101, 1, 102, 0, 0, 7, 5, 1, 1, 102, 0, 0]
           )
         );
-        var module = new WebAssembly.Module(bytes);
-        var instance = new WebAssembly.Instance(module, {
+        var module = new WXWebAssembly.Module(bytes);
+        var instance = new WXWebAssembly.Instance(module, {
           e: {
             f: func
           }
@@ -317,7 +317,7 @@
       if (Module["wasmBinary"]) wasmBinary = Module["wasmBinary"];
       var noExitRuntime;
       if (Module["noExitRuntime"]) noExitRuntime = Module["noExitRuntime"];
-      if (typeof WebAssembly !== "object") {
+      if (typeof WXWebAssembly !== "object") {
         abort("no native wasm support detected");
       }
       var wasmMemory;
@@ -713,9 +713,9 @@
         ABORT = true;
         EXITSTATUS = 1;
         what = "abort(" + what + "). Build with -s ASSERTIONS=1 for more info.";
-        var e = new WebAssembly.RuntimeError(what);
-        readyPromiseReject(e);
-        throw e;
+        // var e = new WXWebAssembly.RuntimeError(what);
+        // readyPromiseReject(e);
+        // throw e;
       }
 
       function hasPrefix(str, prefix) {
@@ -801,7 +801,7 @@
         function instantiateArrayBuffer(receiver) {
           return getBinaryPromise()
             .then(function (binary) {
-              return WebAssembly.instantiate("/opencv/opencv_js.wasm", info);
+              return WXWebAssembly.instantiate("/opencv/opencv_js.wasm.br", info);
             })
             .then(receiver, function (reason) {
               err("failed to asynchronously prepare wasm: " + reason);
@@ -812,14 +812,17 @@
         function instantiateAsync() {
           if (
             !wasmBinary &&
-            typeof WebAssembly.instantiateStreaming === "function" &&
+            typeof WXWebAssembly.instantiateStreaming === "function" &&
             !isDataURI(wasmBinaryFile) &&
             !isFileURI(wasmBinaryFile) &&
             typeof fetch === "function"
           ) {
-            return fetch(wasmBinaryFile, { credentials: "same-origin" }).then(
+            console.log("web");
+            return fetch(wasmBinaryFile, {
+              credentials: "same-origin"
+            }).then(
               function (response) {
-                var result = WebAssembly.instantiateStreaming(response, info);
+                var result = WXWebAssembly.instantiateStreaming(response, info);
                 return result.then(
                   receiveInstantiatedSource,
                   function (reason) {
@@ -832,7 +835,7 @@
             );
           } else {
             // return instantiateArrayBuffer(receiveInstantiatedSource);
-            var result = WebAssembly.instantiate("/opencv/opencv_js.wasm.br", info);
+            var result = WXWebAssembly.instantiate("/opencv/opencv_js.wasm.br", info);
             return result.then(
               receiveInstantiatedSource,
               function (reason) {
@@ -6339,9 +6342,7 @@
           );
           whenDependentTypesAreResolved(
             [],
-            setter ?
-            [getterReturnType, setterArgumentType] :
-            [getterReturnType],
+            setter ? [getterReturnType, setterArgumentType] : [getterReturnType],
             function (types) {
               var getterReturnType = types[0];
               var desc = {
@@ -8573,7 +8574,7 @@
         return mat;
       };
 
-      return cv.ready;
+      return cv;
     };
   })();
   if (typeof exports === "object" && typeof module === "object")
